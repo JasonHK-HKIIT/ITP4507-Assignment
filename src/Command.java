@@ -33,8 +33,6 @@ class CreateEnsembleCommand implements Command
         this.ensembleMap = ensembleMap;
     }
 
-    public String getEnsembleId() { return ensemble.getEnsembleID(); }
-
     @Override
     public boolean execute()
     {
@@ -117,9 +115,9 @@ class CreateEnsembleCommand implements Command
     }
 }
 
+@SuppressWarnings("ClassCanBeRecord")
 class SetCurrentEnsembleCommand implements Command
 {
-    private final MEMS.Memento memento = new MEMS.Memento();
     private final Map<String, Ensemble> ensembleMap;
 
     public SetCurrentEnsembleCommand(Map<String, Ensemble> ensembleMap)
