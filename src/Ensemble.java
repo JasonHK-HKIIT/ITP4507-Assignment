@@ -29,6 +29,23 @@ public abstract class Ensemble
     public abstract void updateMusicianRole();
 
     public abstract void showEnsemble();
+
+    public static class Memento
+    {
+        private final Ensemble ensemble;
+        private final String eName;
+
+        public Memento(Ensemble ensemble)
+        {
+            this.ensemble = ensemble;
+            eName = ensemble.eName;
+        }
+
+        public void restore()
+        {
+            ensemble.eName = eName;
+        }
+    }
 }
 
 class OrchestraEnsemble extends Ensemble

@@ -18,4 +18,21 @@ public class Musician
     public String getName() { return mName; }
 
     public void setName(String name) { mName = name; }
+
+    public static class Memento
+    {
+        private final Musician musician;
+        private final int role;
+
+        public Memento(Musician musician)
+        {
+            this.musician = musician;
+            role = musician.role;
+        }
+
+        public void restore()
+        {
+            musician.role = role;
+        }
+    }
 }

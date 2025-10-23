@@ -249,8 +249,8 @@ class ModifyMusicianInstrumentCommand implements Command
     private final MEMS.Memento memento = new MEMS.Memento();
     private final Ensemble ensemble;
     private Musician musician;
-    private int previousMusicianRole;
-    private int currentMusicianRole;
+    private Musician.Memento musicianMemento;
+    private int musicianRole;
 
     public ModifyMusicianInstrumentCommand(Ensemble ensemble)
     {
@@ -272,6 +272,7 @@ class ModifyMusicianInstrumentCommand implements Command
             if (Objects.equals(musician.getMID(), musicianId))
             {
                 this.musician = musician;
+                musicianMemento = new Musician.Memento(musician);
                 break;
             }
         }
@@ -284,9 +285,8 @@ class ModifyMusicianInstrumentCommand implements Command
         try
         {
             ensemble.updateMusicianRole();
-            previousMusicianRole = musician.getRole();
-            currentMusicianRole = Integer.parseInt(MEMS.scanner.nextLine());
-            musician.setRole(currentMusicianRole);
+            musicianRole = Integer.parseInt(MEMS.scanner.nextLine());
+            musician.setRole(musicianRole);
         }
         catch (NumberFormatException ex)
         {
@@ -301,14 +301,14 @@ class ModifyMusicianInstrumentCommand implements Command
     @Override
     public void undo()
     {
-        musician.setRole(previousMusicianRole);
+        musicianMemento.restore();
         memento.restore();
     }
 
     @Override
     public void redo()
     {
-        musician.setRole(currentMusicianRole);
+        musician.setRole(musicianRole);
         MEMS.setActiveEnsemble(ensemble);
     }
 
@@ -418,27 +418,27 @@ class ChangeEnsembleNameCommand implements Command
 {
     private final MEMS.Memento memento = new MEMS.Memento();
     private final Ensemble ensemble;
-    private final String previousEnsembleName;
-    private String currentEnsembleName;
+    private final Ensemble.Memento ensembleMemento;
+    private String ensembleName;
 
     public ChangeEnsembleNameCommand(Ensemble ensemble)
     {
         this.ensemble = ensemble;
-        previousEnsembleName = ensemble.getName();
+        ensembleMemento = new Ensemble.Memento(ensemble);
     }
 
     @Override
     public boolean execute()
     {
         System.out.print("New ensemble name: ");
-        currentEnsembleName = MEMS.scanner.nextLine().trim();
-        if (currentEnsembleName.isEmpty())
+        ensembleName = MEMS.scanner.nextLine().trim();
+        if (ensembleName.isEmpty())
         {
             System.err.println("Ensemble name cannot be empty!");
             return false;
         }
 
-        ensemble.setName(currentEnsembleName);
+        ensemble.setName(ensembleName);
         System.out.println("Ensemble name is updated.");
         return true;
     }
@@ -446,21 +446,21 @@ class ChangeEnsembleNameCommand implements Command
     @Override
     public void undo()
     {
-        ensemble.setName(previousEnsembleName);
+        ensembleMemento.restore();
         memento.restore();
     }
 
     @Override
     public void redo()
     {
-        ensemble.setName(currentEnsembleName);
+        ensemble.setName(ensembleName);
         MEMS.setActiveEnsemble(ensemble);
     }
 
     @Override
     public String toString()
     {
-        return String.format("Change ensemble name: %s (ID: %s)", currentEnsembleName, ensemble.getEnsembleID());
+        return String.format("Change ensemble name: %s (ID: %s)", ensembleName, ensemble.getEnsembleID());
     }
 }
 
