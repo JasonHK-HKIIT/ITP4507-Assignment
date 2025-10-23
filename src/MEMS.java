@@ -15,6 +15,7 @@ public class MEMS
     /** A mapping of {@link Ensemble} with its ID. */
     private static final Map<String, Ensemble> ensembleMap = new HashMap<>();
 
+    /** The ID of the currently active {@link Ensemble}. {@code null} if no ensemble has been created yet. */
     private static String activeEnsembleId = null;
 
     public static void setActiveEnsemble(String ensembleId)
