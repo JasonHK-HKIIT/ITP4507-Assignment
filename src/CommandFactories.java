@@ -1,9 +1,13 @@
 import java.util.Map;
 import java.util.Stack;
 
+/**
+ * A collection of {@link Command} factory methods.
+ */
 @SuppressWarnings("ClassCanBeRecord")
 class CommandFactories
 {
+    /** A mapping of {@link Ensemble} with its ID. */
     private final Map<String, Ensemble> ensembleMap;
     private final Stack<Command> undoStack;
     private final Stack<Command> redoStack;

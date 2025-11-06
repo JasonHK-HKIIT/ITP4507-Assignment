@@ -15,6 +15,7 @@ public class MEMS
     private static final Stack<Command> undoStack = new Stack<>();
     private static final Stack<Command> redoStack = new Stack<>();
 
+    /** A collection of {@link Command} factory methods. */
     private static final CommandFactories commandFactories = new CommandFactories(ensembleMap, undoStack, redoStack);
 
     /** The ID of the currently active {@link Ensemble}. {@code null} if no ensemble has been created yet. */
@@ -27,6 +28,7 @@ public class MEMS
      */
     static void setActiveEnsemble(String ensembleId)
     {
+        // Print a message when the active ensemble was changed
         if (!Objects.requireNonNull(ensembleId).equals(activeEnsembleId))
         {
             activeEnsembleId = ensembleId;
@@ -45,14 +47,15 @@ public class MEMS
         setActiveEnsemble(ensemble.getEnsembleID());
     }
 
-    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args)
     {
+        //noinspection InfiniteLoopStatement
         while (true)
         {
             System.out.println("Music Ensembles Management System (MEMS)");
             System.out.println("c = create ensemble, s = set current ensemble, a = add musician, m = modify musician's instrument,\nd = delete musician, se = show ensemble, sa = display all ensembles, cn = change ensemble's name,\nu = undo, r = redo, l = list undo/redo, x = exit system");
 
+            // Print only when an active ensemble was selected
             if (Objects.nonNull(activeEnsembleId))
             {
                 System.out.printf("The current ensemble is %s (ID: %s)%n", ensembleMap.get(activeEnsembleId).getName(), activeEnsembleId);
@@ -82,6 +85,7 @@ public class MEMS
 
             if (Objects.nonNull(command) && command.execute())
             {
+                // Clear the redo stack when the command executed successfully
                 if (!redoStack.isEmpty()) { redoStack.clear(); }
                 undoStack.push(command);
             }
@@ -91,6 +95,9 @@ public class MEMS
         }
     }
 
+    /**
+     * A snapshot of the {@link MEMS} class.
+     */
     static class State
     {
         private final String activeEnsembleId;
@@ -100,8 +107,12 @@ public class MEMS
             activeEnsembleId = MEMS.activeEnsembleId;
         }
 
+        /**
+         * Restores the {@link MEMS} class back to the snapshot.
+         */
         void restore()
         {
+            // Print a message when the active ensemble was changed
             if (!Objects.equals(MEMS.activeEnsembleId, activeEnsembleId))
             {
                 MEMS.activeEnsembleId = activeEnsembleId;

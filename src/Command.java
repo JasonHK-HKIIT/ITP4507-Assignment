@@ -7,7 +7,7 @@ interface Command
     /**
      * Execute the command.
      *
-     * @return Whether the executed command should be pushed into an undo stack.
+     * @return {@code true} if the executed command should be pushed into an undo stack, otherwise {@code false}.
      */
     boolean execute();
 
