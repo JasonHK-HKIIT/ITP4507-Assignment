@@ -2,46 +2,46 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 
 @SuppressWarnings("FieldMayBeFinal")
-public abstract class Ensemble
+abstract class Ensemble
 {
     private String ensembleID;
     private String eName;
     private AbstractList<Musician> musicians;
 
-    public Ensemble(String eId)
+    Ensemble(String eId)
     {
         ensembleID = eId;
         musicians = new ArrayList<>();
     }
 
-    public String getEnsembleID() { return ensembleID; }
+    String getEnsembleID() { return ensembleID; }
 
-    public String getName() { return eName; }
+    String getName() { return eName; }
 
-    public void setName(String name) { eName = name; }
+    void setName(String name) { eName = name; }
 
-    public void addMusician(Musician m) { musicians.add(m); }
+    void addMusician(Musician m) { musicians.add(m); }
 
-    public void dropMusician(Musician m) { musicians.remove(m); }
+    void dropMusician(Musician m) { musicians.remove(m); }
 
-    public Iterable<Musician> getMusicians() { return musicians; }
+    Iterable<Musician> getMusicians() { return musicians; }
 
-    public abstract void updateMusicianRole();
+    abstract void updateMusicianRole();
 
-    public abstract void showEnsemble();
+    abstract void showEnsemble();
 
-    public static class Memento
+    static class Memento
     {
         private final Ensemble ensemble;
         private final String eName;
 
-        public Memento(Ensemble ensemble)
+        Memento(Ensemble ensemble)
         {
             this.ensemble = ensemble;
             eName = ensemble.eName;
         }
 
-        public void restore()
+        void restore()
         {
             ensemble.eName = eName;
         }
@@ -53,19 +53,19 @@ class OrchestraEnsemble extends Ensemble
     private static final int VIOLINIST_ROLE = 1;
     private static final int CELLIST_ROLE = 2;
 
-    public OrchestraEnsemble(String eId)
+    OrchestraEnsemble(String eId)
     {
         super(eId);
     }
 
     @Override
-    public void updateMusicianRole()
+    void updateMusicianRole()
     {
         System.out.print("Musician role [1 = violinist / 2 = cellist]: ");
     }
 
     @Override
-    public void showEnsemble()
+    void showEnsemble()
     {
         var violinists = new ArrayList<Musician>();
         var cellists = new ArrayList<Musician>();
@@ -113,19 +113,19 @@ class JazzBandEnsemble extends Ensemble
     private static final int SAXOPHONIST_ROLE = 2;
     private static final int DRUMMER_ROLE = 3;
 
-    public JazzBandEnsemble(String eId)
+    JazzBandEnsemble(String eId)
     {
         super(eId);
     }
 
     @Override
-    public void updateMusicianRole()
+    void updateMusicianRole()
     {
         System.out.print("Musician role [1 = pianist / 2 = saxophonist / 3 = drummer]: ");
     }
 
     @Override
-    public void showEnsemble()
+    void showEnsemble()
     {
         var pianists = new ArrayList<Musician>();
         var saxophonists = new ArrayList<Musician>();

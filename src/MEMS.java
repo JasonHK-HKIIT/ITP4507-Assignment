@@ -25,7 +25,7 @@ public class MEMS
      *
      * @param ensembleId The ID of an ensemble.
      */
-    public static void setActiveEnsemble(String ensembleId)
+    static void setActiveEnsemble(String ensembleId)
     {
         if (!Objects.requireNonNull(ensembleId).equals(activeEnsembleId))
         {
@@ -40,7 +40,7 @@ public class MEMS
      *
      * @param ensemble The ensemble.
      */
-    public static void setActiveEnsemble(Ensemble ensemble)
+    static void setActiveEnsemble(Ensemble ensemble)
     {
         setActiveEnsemble(ensemble.getEnsembleID());
     }

@@ -2,7 +2,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Stack;
 
-public interface Command
+interface Command
 {
     /**
      * Execute the command.
@@ -28,7 +28,7 @@ class CreateEnsembleCommand implements Command
     private final Map<String, Ensemble> ensembleMap;
     private Ensemble ensemble;
 
-    public CreateEnsembleCommand(Map<String, Ensemble> ensembleMap)
+    CreateEnsembleCommand(Map<String, Ensemble> ensembleMap)
     {
         this.ensembleMap = ensembleMap;
     }
@@ -120,7 +120,7 @@ class SetCurrentEnsembleCommand implements Command
 {
     private final Map<String, Ensemble> ensembleMap;
 
-    public SetCurrentEnsembleCommand(Map<String, Ensemble> ensembleMap)
+    SetCurrentEnsembleCommand(Map<String, Ensemble> ensembleMap)
     {
         this.ensembleMap = ensembleMap;
     }
@@ -158,7 +158,7 @@ class AddMusicianCommand implements Command
     private final Ensemble ensemble;
     private Musician musician;
 
-    public AddMusicianCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
+    AddMusicianCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
         ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
     }
@@ -258,7 +258,7 @@ class ModifyMusicianInstrumentCommand implements Command
     private Musician.Memento memento;
     private int musicianRole;
 
-    public ModifyMusicianInstrumentCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
+    ModifyMusicianInstrumentCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
         ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
     }
@@ -337,7 +337,7 @@ class DeleteMusicianCommand implements Command
     private final Ensemble ensemble;
     private Musician musician;
 
-    public DeleteMusicianCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
+    DeleteMusicianCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
         ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
     }
@@ -402,7 +402,7 @@ class ShowEnsembleCommand implements Command
 {
     private final Ensemble ensemble;
 
-    public ShowEnsembleCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
+    ShowEnsembleCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
         ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
     }
@@ -432,7 +432,7 @@ class DisplayAllEnsemblesCommand implements Command
 {
     private final Map<String, Ensemble> ensembleMap;
 
-    public DisplayAllEnsemblesCommand(Map<String, Ensemble> ensembleMap)
+    DisplayAllEnsemblesCommand(Map<String, Ensemble> ensembleMap)
     {
         this.ensembleMap = ensembleMap;
     }
@@ -468,7 +468,7 @@ class ChangeEnsembleNameCommand implements Command
     private final Ensemble.Memento memento;
     private String ensembleName;
 
-    public ChangeEnsembleNameCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
+    ChangeEnsembleNameCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
         ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
         memento = new Ensemble.Memento(ensemble);
@@ -523,7 +523,7 @@ class UndoCommand implements Command
     private final Stack<Command> commandStack;
     private final Stack<Command> commandRedoStack;
 
-    public UndoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
+    UndoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
     {
         this.commandStack = commandStack;
         this.commandRedoStack = commandRedoStack;
@@ -558,7 +558,7 @@ class RedoCommand implements Command
     private final Stack<Command> commandStack;
     private final Stack<Command> commandRedoStack;
 
-    public RedoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
+    RedoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
     {
         this.commandStack = commandStack;
         this.commandRedoStack = commandRedoStack;
@@ -593,7 +593,7 @@ class ListUndoRedoCommand implements Command
     private final Stack<Command> commandStack;
     private final Stack<Command> commandRedoStack;
 
-    public ListUndoRedoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
+    ListUndoRedoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
     {
         this.commandStack = commandStack;
         this.commandRedoStack = commandRedoStack;
