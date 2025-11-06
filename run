@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
-javac src/*.java
-java -classpath ./src MEMS
+shopt -s globstar nullglob && mkdir -p build && javac -d build src/**/*.java
+java -classpath build MEMS
