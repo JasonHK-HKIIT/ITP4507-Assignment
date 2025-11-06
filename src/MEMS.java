@@ -192,11 +192,11 @@ public class MEMS
         return new ExitCommand();
     }
 
-    public static class Memento
+    public static class State
     {
         private final String activeEnsembleId;
 
-        public Memento()
+        public State()
         {
             activeEnsembleId = MEMS.activeEnsembleId;
         }

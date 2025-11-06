@@ -24,7 +24,7 @@ public interface Command
 
 class CreateEnsembleCommand implements Command
 {
-    private final MEMS.Memento memento = new MEMS.Memento();
+    private final MEMS.State state = new MEMS.State();
     private final Map<String, Ensemble> ensembleMap;
     private Ensemble ensemble;
 
@@ -88,7 +88,7 @@ class CreateEnsembleCommand implements Command
     public void undo()
     {
         ensembleMap.remove(ensemble.getEnsembleID());
-        memento.restore();
+        state.restore();
     }
 
     @Override
@@ -154,7 +154,7 @@ class SetCurrentEnsembleCommand implements Command
 
 class AddMusicianCommand implements Command
 {
-    private final MEMS.Memento memento = new MEMS.Memento();
+    private final MEMS.State state = new MEMS.State();
     private final Ensemble ensemble;
     private Musician musician;
 
@@ -219,7 +219,7 @@ class AddMusicianCommand implements Command
     public void undo()
     {
         ensemble.dropMusician(musician);
-        memento.restore();
+        state.restore();
     }
 
     @Override
@@ -246,10 +246,10 @@ class AddMusicianCommand implements Command
 
 class ModifyMusicianInstrumentCommand implements Command
 {
-    private final MEMS.Memento memento = new MEMS.Memento();
+    private final MEMS.State state = new MEMS.State();
     private final Ensemble ensemble;
     private Musician musician;
-    private Musician.Memento musicianMemento;
+    private Musician.Memento memento;
     private int musicianRole;
 
     public ModifyMusicianInstrumentCommand(Ensemble ensemble)
@@ -272,7 +272,7 @@ class ModifyMusicianInstrumentCommand implements Command
             if (Objects.equals(musician.getMID(), musicianId))
             {
                 this.musician = musician;
-                musicianMemento = new Musician.Memento(musician);
+                memento = new Musician.Memento(musician);
                 break;
             }
         }
@@ -301,8 +301,8 @@ class ModifyMusicianInstrumentCommand implements Command
     @Override
     public void undo()
     {
-        musicianMemento.restore();
         memento.restore();
+        state.restore();
     }
 
     @Override
@@ -321,7 +321,7 @@ class ModifyMusicianInstrumentCommand implements Command
 
 class DeleteMusicianCommand implements Command
 {
-    private final MEMS.Memento memento = new MEMS.Memento();
+    private final MEMS.State state = new MEMS.State();
     private final Ensemble ensemble;
     private Musician musician;
 
@@ -363,7 +363,7 @@ class DeleteMusicianCommand implements Command
     public void undo()
     {
         ensemble.addMusician(musician);
-        memento.restore();
+        state.restore();
     }
 
     @Override
@@ -416,15 +416,15 @@ class DisplayAllEnsemblesCommand implements Command
 
 class ChangeEnsembleNameCommand implements Command
 {
-    private final MEMS.Memento memento = new MEMS.Memento();
+    private final MEMS.State state = new MEMS.State();
     private final Ensemble ensemble;
-    private final Ensemble.Memento ensembleMemento;
+    private final Ensemble.Memento memento;
     private String ensembleName;
 
     public ChangeEnsembleNameCommand(Ensemble ensemble)
     {
         this.ensemble = ensemble;
-        ensembleMemento = new Ensemble.Memento(ensemble);
+        memento = new Ensemble.Memento(ensemble);
     }
 
     @Override
@@ -446,8 +446,8 @@ class ChangeEnsembleNameCommand implements Command
     @Override
     public void undo()
     {
-        ensembleMemento.restore();
         memento.restore();
+        state.restore();
     }
 
     @Override
