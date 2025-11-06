@@ -7,7 +7,7 @@ public interface Command
     /**
      * Execute the command.
      *
-     * @return The execution result.
+     * @return Whether the executed command should be pushed into an undo stack.
      */
     boolean execute();
 
@@ -142,7 +142,7 @@ class SetCurrentEnsembleCommand implements Command
         }
 
         MEMS.setActiveEnsemble(activeEnsembleId);
-        return true;
+        return false;
     }
 
     @Override
@@ -158,14 +158,20 @@ class AddMusicianCommand implements Command
     private final Ensemble ensemble;
     private Musician musician;
 
-    public AddMusicianCommand(Ensemble ensemble)
+    public AddMusicianCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
-        this.ensemble = ensemble;
+        ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
     }
 
     @Override
     public boolean execute()
     {
+        if (Objects.isNull(ensemble))
+        {
+            System.err.println("No ensemble to add to.");
+            return false;
+        }
+
         System.out.print("Musician info (ID, name): ");
         var inputs = MEMS.scanner.nextLine().split(",", 2);
         if (inputs.length != 2)
@@ -252,14 +258,20 @@ class ModifyMusicianInstrumentCommand implements Command
     private Musician.Memento memento;
     private int musicianRole;
 
-    public ModifyMusicianInstrumentCommand(Ensemble ensemble)
+    public ModifyMusicianInstrumentCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
-        this.ensemble = ensemble;
+        ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
     }
 
     @Override
     public boolean execute()
     {
+        if (Objects.isNull(ensemble))
+        {
+            System.err.println("No ensemble to edit from.");
+            return false;
+        }
+
         System.out.print("Musician ID: ");
         var musicianId = MEMS.scanner.nextLine().trim();
         if (musicianId.isEmpty())
@@ -325,14 +337,20 @@ class DeleteMusicianCommand implements Command
     private final Ensemble ensemble;
     private Musician musician;
 
-    public DeleteMusicianCommand(Ensemble ensemble)
+    public DeleteMusicianCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
-        this.ensemble = ensemble;
+        ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
     }
 
     @Override
     public boolean execute()
     {
+        if (Objects.isNull(ensemble))
+        {
+            System.err.println("No ensemble to delete from.");
+            return false;
+        }
+
         System.out.print("Musician ID: ");
         var musicianId = MEMS.scanner.nextLine().trim();
         if (musicianId.isEmpty())
@@ -380,6 +398,35 @@ class DeleteMusicianCommand implements Command
     }
 }
 
+class ShowEnsembleCommand implements Command
+{
+    private final Ensemble ensemble;
+
+    public ShowEnsembleCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
+    {
+        ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
+    }
+
+    @Override
+    public boolean execute()
+    {
+        if (Objects.isNull(ensemble))
+        {
+            System.err.println("Nothing to show.");
+            return false;
+        }
+
+        ensemble.showEnsemble();
+        return false;
+    }
+
+    @Override
+    public void undo() {}
+
+    @Override
+    public void redo() {}
+}
+
 @SuppressWarnings("ClassCanBeRecord")
 class DisplayAllEnsemblesCommand implements Command
 {
@@ -404,7 +451,7 @@ class DisplayAllEnsemblesCommand implements Command
             System.out.printf("- %s: %s (ID: %s)%n", ensemble.getClass().getSimpleName(), ensemble.getName(), ensemble.getEnsembleID());
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -421,15 +468,21 @@ class ChangeEnsembleNameCommand implements Command
     private final Ensemble.Memento memento;
     private String ensembleName;
 
-    public ChangeEnsembleNameCommand(Ensemble ensemble)
+    public ChangeEnsembleNameCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
-        this.ensemble = ensemble;
+        ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
         memento = new Ensemble.Memento(ensemble);
     }
 
     @Override
     public boolean execute()
     {
+        if (Objects.isNull(ensemble))
+        {
+            System.err.println("No ensemble to rename.");
+            return false;
+        }
+
         System.out.print("New ensemble name: ");
         ensembleName = MEMS.scanner.nextLine().trim();
         if (ensembleName.isEmpty())
@@ -489,7 +542,7 @@ class UndoCommand implements Command
         System.out.printf("Command is undone: %s%n", command);
         command.undo();
         commandRedoStack.push(command);
-        return true;
+        return false;
     }
 
     @Override
@@ -524,7 +577,7 @@ class RedoCommand implements Command
         System.out.printf("Command is redone: %s%n", command);
         command.redo();
         commandStack.push(command);
-        return true;
+        return false;
     }
 
     @Override
@@ -579,7 +632,7 @@ class ListUndoRedoCommand implements Command
             }
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -594,12 +647,11 @@ class ListUndoRedoCommand implements Command
  */
 class ExitCommand implements Command
 {
-
     @Override
     public boolean execute()
     {
         System.exit(0);
-        return true;
+        return false;
     }
 
     @Override
