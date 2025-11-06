@@ -1,0 +1,104 @@
+#!/bin/bash
+set -euo pipefail
+
+sleep 5
+
+input "c"
+input "o"
+input "E001"
+input "SYO" 5
+
+input "a"
+input "m001, Chole Chua"
+input "1" 5
+
+input "a"
+input "m002, Mischa Maisky"
+input "2" 5
+
+input "se" 5
+
+input "c"
+input "j"
+input "E102"
+input "BLUE NOTE" 5
+
+input "sa" 5
+
+input "a"
+input "m101, Herbie Hancock"
+input "1" 5
+
+input "a"
+input "m102, John Coltrane"
+input "2" 5
+
+input "a"
+input "m103, Buddy Rich"
+input "3" 5
+
+input "se" 5
+
+input "s"
+input "E001" 5
+
+input "sa" 5
+
+input "a"
+input "m003, Joshua Bell"
+input "1" 5
+
+input "se" 5
+
+input "m"
+input "m001"
+input "2" 5
+
+input "se" 5
+
+input "d"
+input "m001" 5
+
+input "se" 5
+
+input "cn"
+input "HSO" 5
+
+input "se" 5
+
+input "l" 5
+
+input "u" 5
+
+input "se" 5
+
+input "u" 5
+
+input "se" 5
+
+input "u" 5
+
+input "se" 5
+
+input "u" 2
+input "u" 5
+
+input "se" 5
+
+input "u" 2
+input "u" 2
+input "u" 5
+
+input "s"
+input "E102" 5
+
+input "l" 5
+
+input "r" 2
+input "r" 5
+
+input "se" 5
+
+input "l" 5
+
+input "x"
