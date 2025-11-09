@@ -7,19 +7,19 @@ interface Command
     /**
      * Execute the command.
      *
-     * @return {@code true} if the executed command should be pushed into an undo stack, otherwise {@code false}.
+     * @return {@code true} if the executed command should be pushed into the undo stack, otherwise {@code false}.
      */
     boolean execute();
 
     /**
      * Undo the command.
      */
-    void undo();
+    default void undo() {}
 
     /**
      * Redo the command.
      */
-    void redo();
+    default void redo() {}
 }
 
 class CreateEnsembleCommand implements Command
@@ -144,12 +144,6 @@ class SetCurrentEnsembleCommand implements Command
         MEMS.setActiveEnsemble(activeEnsembleId);
         return false;
     }
-
-    @Override
-    public void undo() {}
-
-    @Override
-    public void redo() {}
 }
 
 class AddMusicianCommand implements Command
@@ -419,12 +413,6 @@ class ShowEnsembleCommand implements Command
         ensemble.showEnsemble();
         return false;
     }
-
-    @Override
-    public void undo() {}
-
-    @Override
-    public void redo() {}
 }
 
 @SuppressWarnings("ClassCanBeRecord")
@@ -453,12 +441,6 @@ class DisplayAllEnsemblesCommand implements Command
 
         return false;
     }
-
-    @Override
-    public void undo() {}
-
-    @Override
-    public void redo() {}
 }
 
 class ChangeEnsembleNameCommand implements Command
@@ -520,83 +502,71 @@ class ChangeEnsembleNameCommand implements Command
 @SuppressWarnings("ClassCanBeRecord")
 class UndoCommand implements Command
 {
-    private final Stack<Command> commandStack;
-    private final Stack<Command> commandRedoStack;
+    private final Stack<Command> undoStack;
+    private final Stack<Command> redoStack;
 
-    UndoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
+    UndoCommand(Stack<Command> undoStack, Stack<Command> redoStack)
     {
-        this.commandStack = commandStack;
-        this.commandRedoStack = commandRedoStack;
+        this.undoStack = undoStack;
+        this.redoStack = redoStack;
     }
 
     @Override
     public boolean execute()
     {
-        if (commandStack.isEmpty())
+        if (undoStack.isEmpty())
         {
             System.err.println("Nothing to undo.");
             return false;
         }
 
-        var command = commandStack.pop();
+        var command = undoStack.pop();
         System.out.printf("Command is undone: %s%n", command);
         command.undo();
-        commandRedoStack.push(command);
+        redoStack.push(command);
         return false;
     }
-
-    @Override
-    public void undo() {}
-
-    @Override
-    public void redo() {}
 }
 
 @SuppressWarnings("ClassCanBeRecord")
 class RedoCommand implements Command
 {
-    private final Stack<Command> commandStack;
-    private final Stack<Command> commandRedoStack;
+    private final Stack<Command> undoStack;
+    private final Stack<Command> redoStack;
 
-    RedoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
+    RedoCommand(Stack<Command> undoStack, Stack<Command> redoStack)
     {
-        this.commandStack = commandStack;
-        this.commandRedoStack = commandRedoStack;
+        this.undoStack = undoStack;
+        this.redoStack = redoStack;
     }
 
     @Override
     public boolean execute()
     {
-        if (commandRedoStack.isEmpty())
+        if (redoStack.isEmpty())
         {
             System.err.println("Nothing to redo.");
             return false;
         }
 
-        var command = commandRedoStack.pop();
+        var command = redoStack.pop();
         System.out.printf("Command is redone: %s%n", command);
         command.redo();
-        commandStack.push(command);
+        undoStack.push(command);
         return false;
     }
-
-    @Override
-    public void undo() {}
-
-    @Override
-    public void redo() {}
 }
 
 @SuppressWarnings("ClassCanBeRecord")
 class ListUndoRedoCommand implements Command
 {
-    private final Stack<Command> commandStack;
-    private final Stack<Command> commandRedoStack;
+    private final Stack<Command> undoStack;
+    private final Stack<Command> redoStack;
 
-    ListUndoRedoCommand(Stack<Command> commandStack, Stack<Command> commandRedoStack)
+    ListUndoRedoCommand(Stack<Command> undoStack, Stack<Command> redoStack)
     {
-        this.commandStack = commandStack;
-        this.commandRedoStack = commandRedoStack;
+        this.undoStack = undoStack;
+        this.redoStack = redoStack;
     }
 
     @Override
@@ -604,13 +574,13 @@ class ListUndoRedoCommand implements Command
     {
         System.out.println();
         System.out.println("Undo List");
-        if (commandStack.isEmpty())
+        if (undoStack.isEmpty())
         {
             System.out.println("  EMPTY");
         }
         else
         {
-            for (var command : commandStack)
+            for (var command : undoStack)
             {
                 if (command instanceof SetCurrentEnsembleCommand) { continue; }
                 System.out.printf("- %s%n", command);
@@ -619,13 +589,13 @@ class ListUndoRedoCommand implements Command
 
         System.out.println();
         System.out.println("Redo List");
-        if (commandRedoStack.isEmpty())
+        if (redoStack.isEmpty())
         {
             System.out.println("  EMPTY");
         }
         else
         {
-            for (var command : commandRedoStack)
+            for (var command : redoStack)
             {
                 if (command instanceof SetCurrentEnsembleCommand) { continue; }
                 System.out.printf("- %s%n", command);
@@ -634,12 +604,6 @@ class ListUndoRedoCommand implements Command
 
         return false;
     }
-
-    @Override
-    public void undo() {}
-
-    @Override
-    public void redo() {}
 }
 
 /**
@@ -653,10 +617,4 @@ class ExitCommand implements Command
         System.exit(0);
         return false;
     }
-
-    @Override
-    public void undo() {}
-
-    @Override
-    public void redo() {}
 }

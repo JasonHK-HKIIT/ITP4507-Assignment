@@ -9,10 +9,12 @@ public class MEMS
     /** A shared {@code stdin} scanner for the system. */
     static final Scanner scanner = new Scanner(System.in);
 
-    /** A mapping of {@link Ensemble} with its ID. */
+    /** The mapping of {@link Ensemble} with its ID. */
     private static final Map<String, Ensemble> ensembleMap = new HashMap<>();
 
+    /** The undo stack. */
     private static final Stack<Command> undoStack = new Stack<>();
+    /** The redo stack. */
     private static final Stack<Command> redoStack = new Stack<>();
 
     /** A collection of {@link Command} factory methods. */
@@ -85,7 +87,7 @@ public class MEMS
 
             if (Objects.nonNull(command) && command.execute())
             {
-                // Clear the redo stack when the command executed successfully
+                // Clear the redo stack when the command requested to be pushed to the undo stack
                 if (!redoStack.isEmpty()) { redoStack.clear(); }
                 undoStack.push(command);
             }

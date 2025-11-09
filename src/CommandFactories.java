@@ -9,7 +9,10 @@ class CommandFactories
 {
     /** A mapping of {@link Ensemble} with its ID. */
     private final Map<String, Ensemble> ensembleMap;
+
+    /** The undo stack. */
     private final Stack<Command> undoStack;
+    /** The redo stack. */
     private final Stack<Command> redoStack;
 
     CommandFactories(Map<String, Ensemble> ensembleMap, Stack<Command> undoStack, Stack<Command> redoStack)
