@@ -1,2 +1,2 @@
 javac src/*.java
-java -classpath ./src MEMS
+java -classpath ./src Assignment

@@ -24,7 +24,7 @@ interface Command
 
 class CreateEnsembleCommand implements Command
 {
-    private final MEMS.State state = new MEMS.State();
+    private final Assignment.State state = new Assignment.State();
     private final Map<String, Ensemble> ensembleMap;
     private Ensemble ensemble;
 
@@ -37,7 +37,7 @@ class CreateEnsembleCommand implements Command
     public boolean execute()
     {
         System.out.print("Ensemble type [o = orchestra / j = jazz band]: ");
-        var type = MEMS.scanner.nextLine().trim().toLowerCase();
+        var type = Assignment.scanner.nextLine().trim().toLowerCase();
         if (type.isEmpty())
         {
             System.err.println("Ensemble type cannot be empty!");
@@ -45,7 +45,7 @@ class CreateEnsembleCommand implements Command
         }
 
         System.out.print("Ensemble ID: ");
-        var ensembleId = MEMS.scanner.nextLine().trim();
+        var ensembleId = Assignment.scanner.nextLine().trim();
         if (ensembleId.isEmpty())
         {
             System.err.println("Ensemble ID cannot be empty!");
@@ -70,7 +70,7 @@ class CreateEnsembleCommand implements Command
         }
 
         System.out.print("Ensemble name: ");
-        var ensembleName = MEMS.scanner.nextLine().trim();
+        var ensembleName = Assignment.scanner.nextLine().trim();
         if (ensembleName.isEmpty())
         {
             System.err.println("Ensemble name cannot be empty!");
@@ -80,7 +80,7 @@ class CreateEnsembleCommand implements Command
         ensemble.setName(ensembleName);
         ensembleMap.put(ensemble.getEnsembleID(), ensemble);
         System.out.println("Ensemble is created.");
-        MEMS.setActiveEnsemble(ensemble);
+        Assignment.setActiveEnsemble(ensemble);
         return true;
     }
 
@@ -95,7 +95,7 @@ class CreateEnsembleCommand implements Command
     public void redo()
     {
         ensembleMap.put(ensemble.getEnsembleID(), ensemble);
-        MEMS.setActiveEnsemble(ensemble);
+        Assignment.setActiveEnsemble(ensemble);
     }
 
     @Override
@@ -129,7 +129,7 @@ class SetCurrentEnsembleCommand implements Command
     public boolean execute()
     {
         System.out.print("Ensemble ID: ");
-        String activeEnsembleId = MEMS.scanner.nextLine().trim();
+        String activeEnsembleId = Assignment.scanner.nextLine().trim();
         if (activeEnsembleId.isEmpty())
         {
             System.err.println("Ensemble ID cannot be empty!");
@@ -141,14 +141,14 @@ class SetCurrentEnsembleCommand implements Command
             return false;
         }
 
-        MEMS.setActiveEnsemble(activeEnsembleId);
+        Assignment.setActiveEnsemble(activeEnsembleId);
         return false;
     }
 }
 
 class AddMusicianCommand implements Command
 {
-    private final MEMS.State state = new MEMS.State();
+    private final Assignment.State state = new Assignment.State();
     private final Ensemble ensemble;
     private Musician musician;
 
@@ -167,7 +167,7 @@ class AddMusicianCommand implements Command
         }
 
         System.out.print("Musician info (ID, name): ");
-        var inputs = MEMS.scanner.nextLine().split(",", 2);
+        var inputs = Assignment.scanner.nextLine().split(",", 2);
         if (inputs.length != 2)
         {
             System.err.println("Malformed input! Must be ID and name separated by comma, e.g. \"M001, Bob Dylan\".");
@@ -201,7 +201,7 @@ class AddMusicianCommand implements Command
         try
         {
             ensemble.updateMusicianRole();
-            var musicianRole = Integer.parseInt(MEMS.scanner.nextLine());
+            var musicianRole = Integer.parseInt(Assignment.scanner.nextLine());
             musician.setRole(musicianRole);
         }
         catch (NumberFormatException ex)
@@ -226,7 +226,7 @@ class AddMusicianCommand implements Command
     public void redo()
     {
         ensemble.addMusician(musician);
-        MEMS.setActiveEnsemble(ensemble);
+        Assignment.setActiveEnsemble(ensemble);
     }
 
     @Override
@@ -246,7 +246,7 @@ class AddMusicianCommand implements Command
 
 class ModifyMusicianInstrumentCommand implements Command
 {
-    private final MEMS.State state = new MEMS.State();
+    private final Assignment.State state = new Assignment.State();
     private final Ensemble ensemble;
     private Musician musician;
     private Musician.Memento memento;
@@ -267,7 +267,7 @@ class ModifyMusicianInstrumentCommand implements Command
         }
 
         System.out.print("Musician ID: ");
-        var musicianId = MEMS.scanner.nextLine().trim();
+        var musicianId = Assignment.scanner.nextLine().trim();
         if (musicianId.isEmpty())
         {
             System.err.println("Musician ID cannot be empty!");
@@ -291,7 +291,7 @@ class ModifyMusicianInstrumentCommand implements Command
         try
         {
             ensemble.updateMusicianRole();
-            musicianRole = Integer.parseInt(MEMS.scanner.nextLine());
+            musicianRole = Integer.parseInt(Assignment.scanner.nextLine());
             musician.setRole(musicianRole);
         }
         catch (NumberFormatException ex)
@@ -315,7 +315,7 @@ class ModifyMusicianInstrumentCommand implements Command
     public void redo()
     {
         musician.setRole(musicianRole);
-        MEMS.setActiveEnsemble(ensemble);
+        Assignment.setActiveEnsemble(ensemble);
     }
 
     @Override
@@ -327,7 +327,7 @@ class ModifyMusicianInstrumentCommand implements Command
 
 class DeleteMusicianCommand implements Command
 {
-    private final MEMS.State state = new MEMS.State();
+    private final Assignment.State state = new Assignment.State();
     private final Ensemble ensemble;
     private Musician musician;
 
@@ -346,7 +346,7 @@ class DeleteMusicianCommand implements Command
         }
 
         System.out.print("Musician ID: ");
-        var musicianId = MEMS.scanner.nextLine().trim();
+        var musicianId = Assignment.scanner.nextLine().trim();
         if (musicianId.isEmpty())
         {
             System.err.println("Musician ID cannot be empty!");
@@ -382,7 +382,7 @@ class DeleteMusicianCommand implements Command
     public void redo()
     {
         ensemble.dropMusician(musician);
-        MEMS.setActiveEnsemble(ensemble);
+        Assignment.setActiveEnsemble(ensemble);
     }
 
     @Override
@@ -445,7 +445,7 @@ class DisplayAllEnsemblesCommand implements Command
 
 class ChangeEnsembleNameCommand implements Command
 {
-    private final MEMS.State state = new MEMS.State();
+    private final Assignment.State state = new Assignment.State();
     private final Ensemble ensemble;
     private final Ensemble.Memento memento;
     private String ensembleName;
@@ -466,7 +466,7 @@ class ChangeEnsembleNameCommand implements Command
         }
 
         System.out.print("New ensemble name: ");
-        ensembleName = MEMS.scanner.nextLine().trim();
+        ensembleName = Assignment.scanner.nextLine().trim();
         if (ensembleName.isEmpty())
         {
             System.err.println("Ensemble name cannot be empty!");
@@ -489,7 +489,7 @@ class ChangeEnsembleNameCommand implements Command
     public void redo()
     {
         ensemble.setName(ensembleName);
-        MEMS.setActiveEnsemble(ensemble);
+        Assignment.setActiveEnsemble(ensemble);
     }
 
     @Override

@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.Stack;
 
-public class MEMS
+public class Assignment
 {
     /** A shared {@code stdin} scanner for the system. */
     static final Scanner scanner = new Scanner(System.in);
@@ -98,7 +98,7 @@ public class MEMS
     }
 
     /**
-     * A snapshot of the {@link MEMS} class.
+     * A snapshot of the {@link Assignment} class.
      */
     static class State
     {
@@ -106,18 +106,18 @@ public class MEMS
 
         State()
         {
-            activeEnsembleId = MEMS.activeEnsembleId;
+            activeEnsembleId = Assignment.activeEnsembleId;
         }
 
         /**
-         * Restores the {@link MEMS} class back to the snapshot.
+         * Restores the {@link Assignment} class back to the snapshot.
          */
         void restore()
         {
             // Print a message when the active ensemble was changed
-            if (!Objects.equals(MEMS.activeEnsembleId, activeEnsembleId))
+            if (!Objects.equals(Assignment.activeEnsembleId, activeEnsembleId))
             {
-                MEMS.activeEnsembleId = activeEnsembleId;
+                Assignment.activeEnsembleId = activeEnsembleId;
                 if (Objects.isNull(activeEnsembleId))
                 {
                     System.out.println("The current ensemble is changed to NONE.");
