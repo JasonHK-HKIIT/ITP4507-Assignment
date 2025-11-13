@@ -304,6 +304,7 @@ class ModifyMusicianInstrumentCommand implements Command
         var memento = this.memento;
         this.memento = new Musician.Memento(musician);
         memento.restore();
+
         state.restore();
     }
 
@@ -313,6 +314,7 @@ class ModifyMusicianInstrumentCommand implements Command
         var memento = this.memento;
         this.memento = new Musician.Memento(musician);
         memento.restore();
+
         Assignment.setActiveEnsemble(ensemble);
     }
 
