@@ -197,14 +197,11 @@ class AddMusicianCommand implements Command
         }
 
         musician = createMusician(musicianId, musicianName);
-
         try
         {
-            ensemble.updateMusicianRole();
-            var musicianRole = Integer.parseInt(Assignment.scanner.nextLine());
-            musician.setRole(musicianRole);
+            ensemble.updateMusicianRole(musician);
         }
-        catch (NumberFormatException ex)
+        catch (NumberFormatException | InvalidMusicianRoleException ex)
         {
             System.err.println("Invalid musician role!");
             return false;
@@ -250,7 +247,6 @@ class ModifyMusicianInstrumentCommand implements Command
     private final Ensemble ensemble;
     private Musician musician;
     private Musician.Memento memento;
-    private int musicianRole;
 
     ModifyMusicianInstrumentCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
@@ -290,11 +286,9 @@ class ModifyMusicianInstrumentCommand implements Command
 
         try
         {
-            ensemble.updateMusicianRole();
-            musicianRole = Integer.parseInt(Assignment.scanner.nextLine());
-            musician.setRole(musicianRole);
+            ensemble.updateMusicianRole(musician);
         }
-        catch (NumberFormatException ex)
+        catch (NumberFormatException | InvalidMusicianRoleException ex)
         {
             System.err.println("Invalid musician role!");
             return false;
@@ -307,6 +301,8 @@ class ModifyMusicianInstrumentCommand implements Command
     @Override
     public void undo()
     {
+        var memento = this.memento;
+        this.memento = new Musician.Memento(musician);
         memento.restore();
         state.restore();
     }
@@ -314,7 +310,9 @@ class ModifyMusicianInstrumentCommand implements Command
     @Override
     public void redo()
     {
-        musician.setRole(musicianRole);
+        var memento = this.memento;
+        this.memento = new Musician.Memento(musician);
+        memento.restore();
         Assignment.setActiveEnsemble(ensemble);
     }
 

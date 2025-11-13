@@ -26,7 +26,7 @@ abstract class Ensemble
 
     Iterable<Musician> getMusicians() { return musicians; }
 
-    abstract void updateMusicianRole();
+    abstract void updateMusicianRole(Musician musician) throws NumberFormatException, InvalidMusicianRoleException;
 
     abstract void showEnsemble();
 
@@ -59,9 +59,16 @@ class OrchestraEnsemble extends Ensemble
     }
 
     @Override
-    void updateMusicianRole()
+    void updateMusicianRole(Musician musician) throws NumberFormatException, InvalidMusicianRoleException
     {
         System.out.print("Musician role [1 = violinist / 2 = cellist]: ");
+        var role = Integer.parseInt(Assignment.scanner.nextLine());
+        if ((role != VIOLINIST_ROLE) && (role != CELLIST_ROLE))
+        {
+            throw new InvalidMusicianRoleException();
+        }
+
+        musician.setRole(role);
     }
 
     @Override
@@ -119,9 +126,16 @@ class JazzBandEnsemble extends Ensemble
     }
 
     @Override
-    void updateMusicianRole()
+    void updateMusicianRole(Musician musician) throws NumberFormatException, InvalidMusicianRoleException
     {
         System.out.print("Musician role [1 = pianist / 2 = saxophonist / 3 = drummer]: ");
+        var role = Integer.parseInt(Assignment.scanner.nextLine());
+        if ((role != PIANIST_ROLE) && (role != SAXOPHONIST_ROLE) && (role != DRUMMER_ROLE))
+        {
+            throw new InvalidMusicianRoleException();
+        }
+
+        musician.setRole(role);
     }
 
     @Override
