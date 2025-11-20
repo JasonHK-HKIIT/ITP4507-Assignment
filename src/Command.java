@@ -447,13 +447,12 @@ class ChangeEnsembleNameCommand implements Command
 {
     private final Assignment.State state = new Assignment.State();
     private final Ensemble ensemble;
-    private final Ensemble.Memento memento;
+    private Ensemble.Memento memento;
     private String ensembleName;
 
     ChangeEnsembleNameCommand(Map<String, Ensemble> ensembleMap, String activeEnsembleId)
     {
         ensemble = Objects.nonNull(activeEnsembleId) ? ensembleMap.get(activeEnsembleId) : null;
-        memento = new Ensemble.Memento(ensemble);
     }
 
     @Override
@@ -464,6 +463,8 @@ class ChangeEnsembleNameCommand implements Command
             System.err.println("No ensemble to rename.");
             return false;
         }
+        
+        memento = new Ensemble.Memento(ensemble);
 
         System.out.print("New ensemble name: ");
         ensembleName = Assignment.scanner.nextLine().trim();
@@ -582,7 +583,6 @@ class ListUndoRedoCommand implements Command
         {
             for (var command : undoStack)
             {
-                if (command instanceof SetCurrentEnsembleCommand) { continue; }
                 System.out.printf("- %s%n", command);
             }
         }
@@ -597,7 +597,6 @@ class ListUndoRedoCommand implements Command
         {
             for (var command : redoStack)
             {
-                if (command instanceof SetCurrentEnsembleCommand) { continue; }
                 System.out.printf("- %s%n", command);
             }
         }
